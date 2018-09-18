@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class CampsiteDaoFileImpl implements CampsiteDao
    private static final String CAMPSITE_ID_FIELD = "id";
    private static final String CAMPSITE_NAME_FIELD = "name";
 
-   private static final String TEST_DATA = "test-case.json";
+   private static final String TEST_FILE = "/test-case.json";
 
    private Map<Integer, Campsite> campsites = new HashMap<>();
 
@@ -45,9 +46,8 @@ public class CampsiteDaoFileImpl implements CampsiteDao
 
       ObjectMapper mapper = new ObjectMapper();
 
-      ClassLoader classLoader = getClass().getClassLoader();
-      File testFile = new File(classLoader.getResource(TEST_DATA).getFile());
-      JsonNode rootNode = mapper.readTree(testFile);
+      InputStream in = getClass().getResourceAsStream(TEST_FILE);
+      JsonNode rootNode = mapper.readTree(in);
 
       JsonNode campsiteNode = rootNode.get(CAMPSITE_ELEMENT);
 

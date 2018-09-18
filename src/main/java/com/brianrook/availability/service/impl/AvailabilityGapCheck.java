@@ -17,6 +17,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Availability service class.  Used to get and compare availability for the campsites.
+ */
 @Service
 public class AvailabilityGapCheck implements com.brianrook.availability.service.GapCheck
 {
@@ -36,6 +39,9 @@ public class AvailabilityGapCheck implements com.brianrook.availability.service.
       Set<Campsite> campsites = campsiteDao.getAllCampsites();
       Set<Campsite> resultSet = new HashSet<>();
       LOG.debug("got campsites : {}", resultSet);
+
+      //TODO  this could be refactored into a taskexecutor or future model to allow for
+      //multi threaded parallel execution, which would reduce latency, but increase resource usage
       for (Campsite thisSite : campsites)
       {
          if (isAvailable(thisSite, query))
@@ -64,6 +70,10 @@ public class AvailabilityGapCheck implements com.brianrook.availability.service.
       int durationDays = queryDuration.toStandardDays().getDays();
       LOG.info("booking duration is {} days", durationDays);
 
+
+      //TODO the general 'booked' service could be split out into a separate service so that all
+      //availability checks abide to a command design pattern.  This could be used to facilitate
+      //adding new 'availability' checks in the future and executing them in parallel.
       //is the time already booked
       if (isBooked(campsiteBookings, startDate, durationDays))
       {

@@ -8,6 +8,7 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class DataLoad
 {
@@ -15,16 +16,15 @@ public class DataLoad
    private static final String SEARCH_STARTDATE_FIELD = "startDate";
    private static final String SEARCH_ENDDATE_FIELD = "endDate";
 
-   private static final String TEST_FILE = "test-case.json";
+   private static final String TEST_FILE = "/test-case.json";
 
 
    public Interval getQuery() throws IOException
    {
       ObjectMapper mapper = new ObjectMapper();
 
-      ClassLoader classLoader = getClass().getClassLoader();
-      File testFile = new File(classLoader.getResource(TEST_FILE).getFile());
-      JsonNode root = mapper.readTree(testFile);
+      InputStream in = getClass().getResourceAsStream(TEST_FILE);
+      JsonNode root = mapper.readTree(in);
 
       JsonNode queryElement = root.get(SEARCH_ELEMENT);
       String startDateStr = queryElement.get(SEARCH_STARTDATE_FIELD).textValue();

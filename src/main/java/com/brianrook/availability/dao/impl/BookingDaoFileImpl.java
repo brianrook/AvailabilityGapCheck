@@ -12,9 +12,15 @@ import org.springframework.stereotype.Repository;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * DAO class to access bookings/reservations for the campsites.  This is currently
+ * a filesystem/json based system, but could be swapped out for other implementations that
+ * implement the same interface.  The qualitier determines which implementation is in use.
+ */
 @Repository("bookingFile")
 public class BookingDaoFileImpl implements com.brianrook.availability.dao.BookingDao
 {
@@ -23,7 +29,7 @@ public class BookingDaoFileImpl implements com.brianrook.availability.dao.Bookin
    private static final String BOOKING_CAMPSITE_FIELD = "campsiteId";
    private static final String BOOKING_STARTDATE_FIELD = "startDate";
    private static final String BOOKING_ENDDATE_FIELD = "endDate";
-   private static final String TEST_DATA = "test-case.json";
+   private static final String TEST_FILE = "/test-case.json";
 
 
    private Map<Integer, Map<DateTime, Boolean>> campsiteBookings = new HashMap<>();
@@ -57,14 +63,18 @@ public class BookingDaoFileImpl implements com.brianrook.availability.dao.Bookin
    }
 
 
+   /**
+    * Load data into the stateful hashmap so that it can be used across requests.
+    * Map is used here to facilitate speedy retrieval by id.
+    * @throws IOException
+    */
    @PostConstruct
    public void loadData() throws IOException
    {
       ObjectMapper mapper = new ObjectMapper();
 
-      ClassLoader classLoader = getClass().getClassLoader();
-      File testFile = new File(classLoader.getResource(TEST_DATA).getFile());
-      JsonNode root = mapper.readTree(testFile);
+      InputStream in = getClass().getResourceAsStream(TEST_FILE);
+      JsonNode root = mapper.readTree(in);
 
       JsonNode reservations = root.get(BOOKING_ELEMENT);
 

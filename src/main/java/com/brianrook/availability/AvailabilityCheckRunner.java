@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Set;
 
+/**
+ * main runner class.  Used to initialize the query and the service, execute the query and print the response to system out.
+ */
 @Component
 public class AvailabilityCheckRunner
 {
