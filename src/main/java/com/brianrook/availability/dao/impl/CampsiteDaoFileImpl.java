@@ -59,7 +59,7 @@ public class CampsiteDaoFileImpl implements CampsiteDao
          {
             Campsite thisCampsite = new Campsite();
             thisCampsite.setId(objNode.get(CAMPSITE_ID_FIELD).intValue());
-            thisCampsite.setName(objNode.get(CAMPSITE_NAME_FIELD).toString());
+            thisCampsite.setName(objNode.get(CAMPSITE_NAME_FIELD).textValue());
             campsites.put(thisCampsite.getId(), thisCampsite);
          }
       }

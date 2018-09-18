@@ -3,7 +3,6 @@ package com.brianrook.availability;
 import com.brianrook.availability.data.Campsite;
 import com.brianrook.availability.data.DataLoad;
 import com.brianrook.availability.service.GapCheck;
-import com.brianrook.availability.service.impl.AvailabilityGapCheck;
 import org.joda.time.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +15,9 @@ import java.io.IOException;
 import java.util.Set;
 
 @Component
-public class RunGapCheck
+public class AvailabilityCheckRunner
 {
-   private final static Logger LOG = LoggerFactory.getLogger(RunGapCheck.class);
+   private final static Logger LOG = LoggerFactory.getLogger(AvailabilityCheckRunner.class);
    @Autowired
    GapCheck gapCheck;
 
@@ -34,14 +33,14 @@ public class RunGapCheck
 
          //load up spring
          ApplicationContext ctx =
-               new AnnotationConfigApplicationContext("com.brianrook"); // Use annotated beans from the specified package
+               new AnnotationConfigApplicationContext(AvailabilityCheckConfiguration.class); // Use annotated beans from the specified package
 
          //instantiate this bean
-         RunGapCheck main = ctx.getBean(RunGapCheck.class);
+         AvailabilityCheckRunner main = ctx.getBean(AvailabilityCheckRunner.class);
          Set<Campsite> availableSites = main.gapCheck.checkAvailability(query);
+         LOG.info("got available campsites : {}", availableSites);
          for (Campsite thisSite : availableSites)
          {
-            LOG.info("got available campsites : {}", availableSites);
             System.out.println(thisSite.getName());
          }
       }

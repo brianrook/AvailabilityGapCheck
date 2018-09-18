@@ -1,6 +1,6 @@
 package com.brianrook.availability.service.impl;
 
-import com.brianrook.availability.RunGapCheck;
+import com.brianrook.availability.AvailabilityCheckRunner;
 import com.brianrook.availability.dao.BookingDao;
 import com.brianrook.availability.dao.CampsiteDao;
 import com.brianrook.availability.data.Campsite;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.time.YearMonth;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +20,7 @@ import java.util.Set;
 @Service
 public class AvailabilityGapCheck implements com.brianrook.availability.service.GapCheck
 {
-   private final static Logger LOG = LoggerFactory.getLogger(RunGapCheck.class);
+   private final static Logger LOG = LoggerFactory.getLogger(AvailabilityCheckRunner.class);
 
    @Autowired
    @Qualifier("campsiteFile")
@@ -53,7 +52,7 @@ public class AvailabilityGapCheck implements com.brianrook.availability.service.
    public boolean isAvailable(Campsite campsite, Interval availabilityQuery)
    {
       int gapConfig = campsite.getGapAllowed();
-      LOG.debug("cap config for {} is {}", campsite, gapConfig);
+      LOG.debug("gap config for {} is {}", campsite, gapConfig);
 
       Map<DateTime,Boolean> campsiteBookings =
             bookingDao.getBookingsForCampsite(campsite.getId());
@@ -91,7 +90,7 @@ public class AvailabilityGapCheck implements com.brianrook.availability.service.
    {
       if (calendar.get(startDate.minusDays(1))!=null && calendar.get(startDate.minusDays(1))==true)
       {
-         LOG.debug("this start time abuts and existing booking");
+         LOG.debug("this start time abuts an existing booking");
          //the query abuts an existing booking at the end
          return true;
       }
@@ -107,6 +106,7 @@ public class AvailabilityGapCheck implements com.brianrook.availability.service.
                LOG.debug("we have a booking in the gap, return false");
                goodGap = false;
             }
+            LOG.debug("start gap check for {}, returned {}", checkStart, goodGap);
          }
          LOG.info("returning start gap check {}", goodGap);
          return goodGap;
@@ -118,7 +118,7 @@ public class AvailabilityGapCheck implements com.brianrook.availability.service.
    {
       if (calendar.get(endTime.plusDays(1))!=null && calendar.get(endTime.plusDays(1))==true)
       {
-         LOG.debug("this end time abuts and existing booking");
+         LOG.debug("this end time abuts an existing booking");
          //the query abuts an existing booking at the end
          return true;
       }
@@ -135,6 +135,7 @@ public class AvailabilityGapCheck implements com.brianrook.availability.service.
                //we have a booking in the gap, return false
                goodGap = false;
             }
+            LOG.debug("end gap check for {}, returned {}", checkEnd, goodGap);
          }
          LOG.info("returning end gap check {}", goodGap);
          return goodGap;

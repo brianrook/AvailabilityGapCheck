@@ -149,9 +149,11 @@ class GapCheckSpec extends Specification
       where:
       desc              |gapConfig              |outcome
       "abut"            |1                      |true
-      "gap 2"           |2                      |true
+      //since the booking is at the end of the day, we are actually covering day 1 here.
+      "gap 2"           |2                      |false
       "gap 3"           |3                      |false
       "gap 4"           |4                      |false
    }
+
 
 }
