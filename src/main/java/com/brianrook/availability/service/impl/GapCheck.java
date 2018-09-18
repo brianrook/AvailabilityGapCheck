@@ -1,21 +1,40 @@
 package com.brianrook.availability.service.impl;
 
+import com.brianrook.availability.dao.BookingDao;
+import com.brianrook.availability.dao.CampsiteDao;
 import com.brianrook.availability.data.Campsite;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import java.time.YearMonth;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class GapCheck
+@Service
+public class GapCheck implements com.brianrook.availability.service.GapCheck
 {
 
+   @Autowired
+   @Qualifier("campsiteFile")
+   CampsiteDao campsiteDao;
+
+   @Autowired
+   @Qualifier("bookingFile")
+   BookingDao bookingDao;
+
+
+   @Override
    public boolean isAvailable(Campsite campsite, Interval availabilityQuery)
    {
       int gapConfig = campsite.getGapAllowed();
+
+      Map<DateTime,Boolean> campsiteBookings =
+            bookingDao.getBookingsForCampsite(campsite.getId());
 
       //find start time and duration
       DateTime startDate = availabilityQuery.getStart();
@@ -23,14 +42,14 @@ public class GapCheck
       int durationDays = queryDuration.toStandardDays().getDays();
 
       //is the time already booked
-      if (isBooked(campsite.getCalendar(), startDate, durationDays))
+      if (isBooked(campsiteBookings, startDate, durationDays))
       {
          return false;
       }
 
       //check the gap
-      if (goodStartGap(campsite.getCalendar(), startDate, gapConfig) &&
-            goodEndGap(campsite.getCalendar(), availabilityQuery.getEnd(), gapConfig))
+      if (goodStartGap(campsiteBookings, startDate, gapConfig) &&
+            goodEndGap(campsiteBookings, availabilityQuery.getEnd(), gapConfig))
       {
          return true;
       }
@@ -106,10 +125,11 @@ public class GapCheck
       return isBooked;
    }
 
-   public Set<Campsite> checkAvailability(Map<Integer,Campsite> campsites, Interval query)
+   @Override
+   public Set<Campsite> checkAvailability(Interval query)
    {
-      Set<Campsite> resultSet = new HashSet<>();
-      for (Campsite thisSite : campsites.values())
+      Set<Campsite> resultSet = campsiteDao.getAllCampsites();
+      for (Campsite thisSite : resultSet)
       {
          if (isAvailable(thisSite, query))
          {

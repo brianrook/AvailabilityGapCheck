@@ -9,14 +9,12 @@ import java.util.Map;
 /**
  * Class used to store campsite information, including calendar and availability configuration
  */
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Campsite
 {
    private int id;
    private String name;
    private int gapAllowed = 1;
 
-   private Map<DateTime, Boolean> calendar = new HashMap<>();
 
    public int getGapAllowed()
    {
@@ -26,16 +24,6 @@ public class Campsite
    public void setGapAllowed(int gapAllowed)
    {
       this.gapAllowed = gapAllowed;
-   }
-
-   public Map<DateTime, Boolean> getCalendar()
-   {
-      return calendar;
-   }
-
-   public void setCalendar(Map<DateTime, Boolean> calendar)
-   {
-      this.calendar = calendar;
    }
 
    public int getId()
@@ -65,7 +53,6 @@ public class Campsite
             "id=" + id +
             ", name='" + name + '\'' +
             ", gapAllowed=" + gapAllowed +
-            ", calendar=" + calendar +
             '}';
    }
 }
