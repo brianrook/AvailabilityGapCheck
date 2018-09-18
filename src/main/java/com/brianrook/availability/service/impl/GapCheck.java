@@ -6,7 +6,9 @@ import org.joda.time.Duration;
 import org.joda.time.Interval;
 
 import java.time.YearMonth;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class GapCheck
 {
@@ -75,7 +77,7 @@ public class GapCheck
       {
          boolean goodGap=true;
          //check the gap, start at 2 because we already checked 1
-         for (int i=2; i<=gapConfig; i++)
+         for (int i=2; i<=gapConfig+1; i++)
          {
             DateTime checkEnd = endTime.plusDays(i);
             if (calendar.get(checkEnd)!=null && calendar.get(checkEnd)==true)
@@ -104,4 +106,17 @@ public class GapCheck
       return isBooked;
    }
 
+   public Set<Campsite> checkAvailability(Map<Integer,Campsite> campsites, Interval query)
+   {
+      Set<Campsite> resultSet = new HashSet<>();
+      for (Campsite thisSite : campsites.values())
+      {
+         if (isAvailable(thisSite, query))
+         {
+            resultSet.add(thisSite);
+         }
+      }
+
+      return resultSet;
+   }
 }

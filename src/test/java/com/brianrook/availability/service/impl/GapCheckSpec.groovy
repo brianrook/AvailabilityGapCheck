@@ -155,5 +155,4 @@ class GapCheckSpec extends Specification
       "gap 4"           |4                      |false
    }
 
-
 }

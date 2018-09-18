@@ -1,18 +1,22 @@
 package com.brianrook.availability.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.joda.time.DateTime;
 
-import java.time.YearMonth;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Class used to store campsite information, including calendar and availability configuration
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Campsite
 {
-   private String campsiteName;
-   private int gapAllowed;
-   private Map<DateTime, Boolean> calendar;
+   private int id;
+   private String name;
+   private int gapAllowed = 1;
+
+   private Map<DateTime, Boolean> calendar = new HashMap<>();
 
    public int getGapAllowed()
    {
@@ -34,21 +38,32 @@ public class Campsite
       this.calendar = calendar;
    }
 
-   public String getCampsiteName()
+   public int getId()
    {
-      return campsiteName;
+      return id;
    }
 
-   public void setCampsiteName(String campsiteName)
+   public void setId(int id)
    {
-      this.campsiteName = campsiteName;
+      this.id = id;
+   }
+
+   public String getName()
+   {
+      return name;
+   }
+
+   public void setName(String name)
+   {
+      this.name = name;
    }
 
    @Override
    public String toString()
    {
       return "Campsite{" +
-            "campsiteName='" + campsiteName + '\'' +
+            "id=" + id +
+            ", name='" + name + '\'' +
             ", gapAllowed=" + gapAllowed +
             ", calendar=" + calendar +
             '}';
