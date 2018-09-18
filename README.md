@@ -1,5 +1,5 @@
 # AvailabilityGapCheck
-#Overview
+## Overview
 Spring based java application that loads campsite and reservation
 information from a json file.
 
@@ -9,14 +9,15 @@ Determines availability based on open times as well as 'gap' configuration.
 
 Gap configuration allows the campsite to deny bookings that are within a 
 specified date range of each other
-#Build and Run
+
+## Build and Run
 `mvn clean package`
 
 `cd target`
 
 `java -jar AvailabilityGapCheck-1.0-SNAPSHOT.jar`
 
-#Design Overview
+## Design Overview
 This is a standard n-tier design with a service and dao layer.  Dependency injection
 is supplied by spring annotation based configuration.
 
