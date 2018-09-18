@@ -48,6 +48,11 @@ public class BookingDaoFileImpl implements com.brianrook.availability.dao.Bookin
    @Override
    public Map<DateTime, Boolean> getBookingsForCampsite(int campsiteId)
    {
+      if (null==campsiteBookings.get(campsiteId))
+      {
+         //if we get a campsite that is not initialized, initialize it
+         campsiteBookings.put(campsiteId, new HashMap<DateTime, Boolean>());
+      }
       return campsiteBookings.get(campsiteId);
    }
 

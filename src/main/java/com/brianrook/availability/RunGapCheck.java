@@ -2,7 +2,8 @@ package com.brianrook.availability;
 
 import com.brianrook.availability.data.Campsite;
 import com.brianrook.availability.data.DataLoad;
-import com.brianrook.availability.service.impl.GapCheck;
+import com.brianrook.availability.service.GapCheck;
+import com.brianrook.availability.service.impl.AvailabilityGapCheck;
 import org.joda.time.Interval;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +26,11 @@ public class RunGapCheck
    {
       try
       {
+         LOG.info("starting up availability check");
          //get the query
          DataLoad data = new DataLoad();
          Interval query = data.getQuery();
+         LOG.info("query : {}", query);
 
          //load up spring
          ApplicationContext ctx =
@@ -38,11 +41,13 @@ public class RunGapCheck
          Set<Campsite> availableSites = main.gapCheck.checkAvailability(query);
          for (Campsite thisSite : availableSites)
          {
+            LOG.info("got available campsites : {}", availableSites);
             System.out.println(thisSite.getName());
          }
       }
       catch (IOException e)
       {
+         LOG.error("unable to load test data set, error: {}", e.getMessage(), e);
          System.out.println("unable to load test data set");
          System.exit(1);
       }

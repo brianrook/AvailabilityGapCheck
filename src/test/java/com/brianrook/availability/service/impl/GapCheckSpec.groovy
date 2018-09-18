@@ -1,7 +1,6 @@
 package com.brianrook.availability.service.impl
 
 import org.joda.time.DateTime
-import org.joda.time.Interval
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -16,7 +15,7 @@ class GapCheckSpec extends Specification
       testBookings.put(DateTime.now().withTimeAtStartOfDay().minusDays(2), false)
       testBookings.put(DateTime.now().withTimeAtStartOfDay().minusDays(1), true)
 
-      GapCheck gapCheck = new GapCheck()
+      AvailabilityGapCheck gapCheck = new AvailabilityGapCheck()
 
       when:
       def available = gapCheck.isBooked(testBookings, DateTime.now().withTimeAtStartOfDay().minusDays(2), 1)
@@ -35,7 +34,7 @@ class GapCheckSpec extends Specification
       testBookings.put(DateTime.now().withTimeAtStartOfDay().minusDays(2), false)
       testBookings.put(DateTime.now().withTimeAtStartOfDay().minusDays(1), true)
 
-      GapCheck gapCheck = new GapCheck()
+      AvailabilityGapCheck gapCheck = new AvailabilityGapCheck()
 
       when:
       def isBooked = gapCheck.isBooked(testBookings, DateTime.now().withTimeAtStartOfDay().minusDays(3), 1)
@@ -53,7 +52,7 @@ class GapCheckSpec extends Specification
       testBookings.put(DateTime.now().withTimeAtStartOfDay().minusDays(2), false)
       testBookings.put(DateTime.now().withTimeAtStartOfDay().minusDays(1), true)
 
-      GapCheck gapCheck = new GapCheck()
+      AvailabilityGapCheck gapCheck = new AvailabilityGapCheck()
 
       when:
       def isBooked = gapCheck.isBooked(testBookings, DateTime.now().withTimeAtStartOfDay().minusDays(2), 1)
@@ -72,7 +71,7 @@ class GapCheckSpec extends Specification
       testBookings.put(DateTime.now().withTimeAtStartOfDay().minusDays(2), false)
       testBookings.put(DateTime.now().withTimeAtStartOfDay().minusDays(1), true)
 
-      GapCheck gapCheck = new GapCheck()
+      AvailabilityGapCheck gapCheck = new AvailabilityGapCheck()
 
       when:
       def isBooked = gapCheck.isBooked(testBookings, DateTime.now().withTimeAtStartOfDay().minusDays(2), 2)
@@ -91,7 +90,7 @@ class GapCheckSpec extends Specification
       testBookings.put(DateTime.now().withTimeAtStartOfDay().minusDays(2), true)
       testBookings.put(DateTime.now().withTimeAtStartOfDay().minusDays(1), true)
 
-      GapCheck gapCheck = new GapCheck()
+      AvailabilityGapCheck gapCheck = new AvailabilityGapCheck()
 
       when:
       def available = gapCheck.goodStartGap(testBookings, DateTime.now().withTimeAtStartOfDay(), 2)
@@ -112,7 +111,7 @@ class GapCheckSpec extends Specification
       testBookings.put(DateTime.now().withTimeAtStartOfDay().minusDays(2), false)
       testBookings.put(DateTime.now().withTimeAtStartOfDay().minusDays(1), false)
 
-      GapCheck gapCheck = new GapCheck()
+      AvailabilityGapCheck gapCheck = new AvailabilityGapCheck()
 
       when:
       def available = gapCheck.goodStartGap(testBookings, DateTime.now().withTimeAtStartOfDay(), gapConfig)
@@ -138,7 +137,7 @@ class GapCheckSpec extends Specification
       testBookings.put(DateTime.now().withTimeAtStartOfDay().plusDays(2), false)
       testBookings.put(DateTime.now().withTimeAtStartOfDay().plusDays(1), false)
 
-      GapCheck gapCheck = new GapCheck()
+      AvailabilityGapCheck gapCheck = new AvailabilityGapCheck()
 
       when:
       def available = gapCheck.goodEndGap(testBookings, DateTime.now().withTimeAtStartOfDay(), gapConfig)
