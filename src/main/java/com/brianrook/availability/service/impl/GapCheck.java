@@ -27,7 +27,8 @@ public class GapCheck
       }
 
       //check the gap
-      if (goodStartGap(campsite.getCalendar(), startDate, gapConfig) && goodEndGap(campsite.getCalendar(), availabilityQuery.getEnd(), gapConfig))
+      if (goodStartGap(campsite.getCalendar(), startDate, gapConfig) &&
+            goodEndGap(campsite.getCalendar(), availabilityQuery.getEnd(), gapConfig))
       {
          return true;
       }
@@ -40,62 +41,67 @@ public class GapCheck
 
    private boolean goodStartGap(Map<DateTime,Boolean> calendar, DateTime startDate, int gapConfig)
    {
-      if (calendar.get(startDate.minusDays(1))!=null || calendar.get(startDate.minusDays(1))==true)
+      if (calendar.get(startDate.minusDays(1))!=null && calendar.get(startDate.minusDays(1))==true)
       {
          //the query abuts an existing booking at the end
          return true;
       }
       else
       {
+         boolean goodGap = true;
          //check the gap, start at 2 because we already checked 1
          for (int i=2; i<=gapConfig; i++)
          {
             DateTime checkStart = startDate.minusDays(i);
-            if (calendar.get(checkStart)!=null || calendar.get(checkStart)==true)
+            if (calendar.get(checkStart)!=null && calendar.get(checkStart)==true)
             {
                //we have a booking in the gap, return false
-               return false;
+               goodGap = false;
             }
          }
+         return goodGap;
       }
-      return true;
+
    }
 
    private boolean goodEndGap(Map<DateTime,Boolean> calendar, DateTime endTime, int gapConfig)
    {
-      if (calendar.get(endTime.plusDays(1))!=null || calendar.get(endTime.plusDays(1))==true)
+      if (calendar.get(endTime.plusDays(1))!=null && calendar.get(endTime.plusDays(1))==true)
       {
          //the query abuts an existing booking at the end
          return true;
       }
       else
       {
+         boolean goodGap=true;
          //check the gap, start at 2 because we already checked 1
          for (int i=2; i<=gapConfig; i++)
          {
             DateTime checkEnd = endTime.plusDays(i);
-            if (calendar.get(checkEnd)!=null || calendar.get(checkEnd)==true)
+            if (calendar.get(checkEnd)!=null && calendar.get(checkEnd)==true)
             {
                //we have a booking in the gap, return false
-               return false;
+               goodGap = false;
             }
          }
+         return goodGap;
       }
-      return true;
    }
 
 
    private boolean isBooked(Map<DateTime, Boolean> bookings, DateTime startDate, int durationDays)
    {
+      boolean isBooked = false;
       for (int i=0; i<=durationDays; i++)
       {
-         if (bookings.get(startDate.plusDays(i)) == true)
+         DateTime checkDate = startDate.plusDays(i);
+         if (bookings.get(checkDate)!=null && (bookings.get(checkDate) == true))
          {
             //if any days are booked, we are not available
-            return true;
+            isBooked = true;
          }
       }
-      return false;
+      return isBooked;
    }
 
 }

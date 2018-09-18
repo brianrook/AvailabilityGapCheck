@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public class Campsite
 {
+   private String campsiteName;
    private int gapAllowed;
    private Map<DateTime, Boolean> calendar;
 
@@ -33,11 +34,22 @@ public class Campsite
       this.calendar = calendar;
    }
 
+   public String getCampsiteName()
+   {
+      return campsiteName;
+   }
+
+   public void setCampsiteName(String campsiteName)
+   {
+      this.campsiteName = campsiteName;
+   }
+
    @Override
    public String toString()
    {
       return "Campsite{" +
-            "gapAllowed=" + gapAllowed +
+            "campsiteName='" + campsiteName + '\'' +
+            ", gapAllowed=" + gapAllowed +
             ", calendar=" + calendar +
             '}';
    }
